@@ -1,0 +1,348 @@
+
+//campus.mcgill.ca/emf/CPE/kpouli3/Desktop/G16_Lab1/stddev.axf:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+00000000 <__cs3_interrupt_vector>:
+			.text
+			.global _start
+
+//_start:
+			LDR R1, =XMAX		//R1 points to XMAX
+   0:	e59f10a8 	ldr	r1, [pc, #168]	; b0 <NUMBERS+0x20>
+			LDR R2, =XMIN		//R2 points to XMIN
+   4:	e59f20a8 	ldr	r2, [pc, #168]	; b4 <NUMBERS+0x24>
+			LDR R0, =STDDEV		//
+   8:	e59f00a8 	ldr	r0, [pc, #168]	; b8 <NUMBERS+0x28>
+			LDR R6, [R0, #4]	//R6 holds # of elements in list
+   c:	e5906004 	ldr	r6, [r0, #4]
+			ADD R3, R0, #8		//R3 = R1 + 8 
+  10:	e2803008 	add	r3, r0, #8
+			LDR R7, [R3]		//R7 holds the first number in the list
+  14:	e5937000 	ldr	r7, [r3]
+
+			ADD R4, R6, #0		//move value of R6 to R4
+  18:	e2864000 	add	r4, r6, #0
+
+0000001c <LOOP1>:
+
+LOOP1:		SUBS R4, R4, #1		//decrement loop counter
+  1c:	e2544001 	subs	r4, r4, #1
+			BEQ ICI				//end loop if counter reaches 0
+  20:	0a000005 	beq	3c <ICI>
+			ADD R3, R3, #4		//R3 points to the next number in the list
+  24:	e2833004 	add	r3, r3, #4
+			LDR R5, [R3]		//R5 holds next number in the list
+  28:	e5935000 	ldr	r5, [r3]
+			CMP R7, R5			//check if greater than current max
+  2c:	e1570005 	cmp	r7, r5
+			BGE LOOP1			//if R7 >= R5, branch back to loop
+  30:	aafffff9 	bge	1c <LOOP1>
+			MOV R7, R5			//if R5 >= R7, update R7
+  34:	e1a07005 	mov	r7, r5
+			B LOOP1				//branch back to loop
+  38:	eafffff7 	b	1c <LOOP1>
+
+0000003c <ICI>:
+
+ICI:		STR R7, [R1]		//store result to memory location of result
+  3c:	e5817000 	str	r7, [r1]
+			ADD R4, R6, #0
+  40:	e2864000 	add	r4, r6, #0
+			ADD R3, R2, #8		//R3 = R2 + 8 (first number)
+  44:	e2823008 	add	r3, r2, #8
+			LDR R8, [R3]
+  48:	e5938000 	ldr	r8, [r3]
+
+0000004c <LOOP2>:
+
+LOOP2:		SUBS R4, R4, #1		//decrement loop counter
+  4c:	e2544001 	subs	r4, r4, #1
+			BEQ DONE			//end loop if counter reaches 0
+  50:	0a000005 	beq	6c <DONE>
+			ADD R3, R3, #4
+  54:	e2833004 	add	r3, r3, #4
+			LDR R5, [R3]
+  58:	e5935000 	ldr	r5, [r3]
+			CMP R8, R5
+  5c:	e1580005 	cmp	r8, r5
+			BLE LOOP2
+  60:	dafffff9 	ble	4c <LOOP2>
+			MOV R8, R5
+  64:	e1a08005 	mov	r8, r5
+			B LOOP2
+  68:	eafffff7 	b	4c <LOOP2>
+
+0000006c <DONE>:
+
+DONE:		STR R8, [R3]
+  6c:	e5838000 	str	r8, [r3]
+
+			SUB R9, R7, R8		//update std dev to be xmax-xmin, now we have to divide by 4
+  70:	e0479008 	sub	r9, r7, r8
+			LSR R9, R9, #2		//LOGICAL RIGHT SHIFT BY 2 TO DIVIDE BY 4
+  74:	e1a09129 	lsr	r9, r9, #2
+
+			STR R9, [R0]
+  78:	e5809000 	str	r9, [r0]
+
+0000007c <END>:
+
+END:		B END
+  7c:	eafffffe 	b	7c <END>
+
+00000080 <XMAX>:
+  80:	00000000 	.word	0x00000000
+
+00000084 <XMIN>:
+  84:	00000000 	.word	0x00000000
+
+00000088 <STDDEV>:
+  88:	00000000 	.word	0x00000000
+
+0000008c <N>:
+  8c:	00000008 	.word	0x00000008
+
+00000090 <NUMBERS>:
+  90:	00000004 	.word	0x00000004
+  94:	00000005 	.word	0x00000005
+  98:	00000003 	.word	0x00000003
+  9c:	00000006 	.word	0x00000006
+  a0:	0000000a 	.word	0x0000000a
+  a4:	00000002 	.word	0x00000002
+  a8:	00000007 	.word	0x00000007
+  ac:	00000001 	.word	0x00000001
+  b0:	00000080 	.word	0x00000080
+  b4:	00000084 	.word	0x00000084
+  b8:	00000088 	.word	0x00000088
+			.text
+			.global _start
+
+//_start:
+			LDR R4, =RESULT		//R4 points to RESULT
+  bc:	e59f4054 	ldr	r4, [pc, #84]	; 118 <NUMBERS+0x1c>
+			LDR R2, [R4, #4]	//R2 holds # of elements in list
+  c0:	e5942004 	ldr	r2, [r4, #4]
+			ADD R3, R4, #8		//R3 = R4 + 8
+  c4:	e2843008 	add	r3, r4, #8
+			LDR R0, [R3]		//R0 holds the first number in the list
+  c8:	e5930000 	ldr	r0, [r3]
+
+000000cc <LOOP>:
+
+LOOP:		SUBS R2, R2, #1		//decrement loop counter
+  cc:	e2522001 	subs	r2, r2, #1
+			BEQ DONE			//end loop if counter reaches 0
+  d0:	0a000005 	beq	ec <DONE>
+			ADD R3, R3, #4		//R3 points to the next number in the list
+  d4:	e2833004 	add	r3, r3, #4
+			LDR R1, [R3]		//R1 holds next number in the list
+  d8:	e5931000 	ldr	r1, [r3]
+			CMP R0, R1			//check if greater than current max
+  dc:	e1500001 	cmp	r0, r1
+			BGE LOOP			//if R0 >= R1, branch back to loop
+  e0:	aafffff9 	bge	cc <LOOP>
+			MOV R0, R1			//if R1 >= R0, update R0
+  e4:	e1a00001 	mov	r0, r1
+			B LOOP				//branch back to loop
+  e8:	eafffff7 	b	cc <LOOP>
+
+000000ec <DONE>:
+
+DONE:		STR R0, [R4]		//store result to memory location of result
+  ec:	e5840000 	str	r0, [r4]
+
+000000f0 <END>:
+
+END:		B END				//infinite loop
+  f0:	eafffffe 	b	f0 <END>
+
+000000f4 <RESULT>:
+  f4:	00000000 	.word	0x00000000
+
+000000f8 <N>:
+  f8:	00000007 	.word	0x00000007
+
+000000fc <NUMBERS>:
+  fc:	00000004 	.word	0x00000004
+ 100:	00000005 	.word	0x00000005
+ 104:	00000003 	.word	0x00000003
+ 108:	00000006 	.word	0x00000006
+ 10c:	00000001 	.word	0x00000001
+ 110:	00000008 	.word	0x00000008
+ 114:	00000002 	.word	0x00000002
+ 118:	000000f4 	.word	0x000000f4
+			.text
+			.global _start
+
+//_start:			
+			LDR R4, =AVG		//R4 points to AVG
+ 11c:	e59f408c 	ldr	r4, [pc, #140]	; 1b0 <NUMBERS+0x20>
+			LDR R2, [R4, #4]	//R2 holds # of elements in list
+ 120:	e5942004 	ldr	r2, [r4, #4]
+			ADD R3, R4, #8		//R3 = R4 + 8 (current number pointer)
+ 124:	e2843008 	add	r3, r4, #8
+			LDR R0, [R3]		//R0 holds the first number in the list
+ 128:	e5930000 	ldr	r0, [r3]
+
+			MOV R7, R2			//R7 holds number of elements
+ 12c:	e1a07002 	mov	r7, r2
+
+00000130 <LOOP>:
+
+LOOP:		SUBS R7, R7, #1		//decrement R2
+ 130:	e2577001 	subs	r7, r7, #1
+			BEQ DONE
+ 134:	0a000003 	beq	148 <DONE>
+			ADD R3, R3, #4		//R3 points to the next number in the list
+ 138:	e2833004 	add	r3, r3, #4
+			LDR R1, [R3]
+ 13c:	e5931000 	ldr	r1, [r3]
+			ADD R0, R0, R1
+ 140:	e0800001 	add	r0, r0, r1
+			B LOOP
+ 144:	eafffff9 	b	130 <LOOP>
+
+00000148 <DONE>:
+DONE:	
+			MOV R8, #0			// R8 is a counter for the division
+ 148:	e3a08000 	mov	r8, #0
+
+0000014c <DIVIDE>:
+
+DIVIDE:		SUBS R0, R0, R2
+ 14c:	e0500002 	subs	r0, r0, r2
+			BMI THEN
+ 150:	4a000001 	bmi	15c <THEN>
+			ADD R8, #1		//we shift in a loop to divide by the right power of 2
+ 154:	e2888001 	add	r8, r8, #1
+			B DIVIDE
+ 158:	eafffffb 	b	14c <DIVIDE>
+
+0000015c <THEN>:
+			
+			
+			//At this point, we have a list of elements with its average stored in R8
+			//Now we have to center the list, so we will subtract the average from every element in the list.
+
+THEN:		STR R8, [R4]	//store average in its memory location
+ 15c:	e5848000 	str	r8, [r4]
+			ADD R5, R2, #1		//R5 holds the number of elements in the list +1 to get the last element -- FIX THISS
+ 160:	e2825001 	add	r5, r2, #1
+			ADD R3, R4, #8		//we replace the pointer for our loop
+ 164:	e2843008 	add	r3, r4, #8
+
+00000168 <CENTER>:
+		
+			// when R5 is 8 (number of elements) it doesnt get to 18 (last element)
+			// ordering p
+
+CENTER:		SUBS R5, R5, #1		//decrement loop
+ 168:	e2555001 	subs	r5, r5, #1
+			BEQ END
+ 16c:	0a000004 	beq	184 <END>
+			LDR R1, [R3]		//point to the next number
+ 170:	e5931000 	ldr	r1, [r3]
+			SUB R1, R1, R8		//subtract the average
+ 174:	e0411008 	sub	r1, r1, r8
+			STR R1, [R3]		//store new value in memory location of old value
+ 178:	e5831000 	str	r1, [r3]
+			ADD R3, R3, #4		//point to the next number in the list
+ 17c:	e2833004 	add	r3, r3, #4
+			B CENTER
+ 180:	eafffff8 	b	168 <CENTER>
+
+00000184 <END>:
+			
+
+END:		B END				//infinite loop			
+ 184:	eafffffe 	b	184 <END>
+
+00000188 <AVG>:
+ 188:	00000000 	.word	0x00000000
+
+0000018c <N>:
+ 18c:	00000008 	.word	0x00000008
+
+00000190 <NUMBERS>:
+ 190:	00000002 	.word	0x00000002
+ 194:	00000004 	.word	0x00000004
+ 198:	00000006 	.word	0x00000006
+ 19c:	00000008 	.word	0x00000008
+ 1a0:	0000000c 	.word	0x0000000c
+ 1a4:	0000000e 	.word	0x0000000e
+ 1a8:	00000010 	.word	0x00000010
+ 1ac:	00000012 	.word	0x00000012
+ 1b0:	00000188 	.word	0x00000188
+
+000001b4 <_start>:
+			.text
+			.global _start
+
+_start:			
+			LDR R4, =N			//R4 points to # of elements in the list
+ 1b4:	e59f4068 	ldr	r4, [pc, #104]	; 224 <ARRAY+0x14>
+			LDR R5, [R4]		//R5 holds the number of elements in the list
+ 1b8:	e5945000 	ldr	r5, [r4]
+
+			MOV R1, #0			// R1 = boolean for sorted
+ 1bc:	e3a01000 	mov	r1, #0
+
+000001c0 <BUBBLE>:
+
+BUBBLE:		CMP R1, #1
+ 1c0:	e3510001 	cmp	r1, #1
+			BEQ TRUE			//stop the loop if sorted == true
+ 1c4:	0a00000f 	beq	208 <TRUE>
+			MOV R1, #1
+ 1c8:	e3a01001 	mov	r1, #1
+			MOV R3, R5			// number of elements in the list
+ 1cc:	e1a03005 	mov	r3, r5
+			LDR R2, [R4, #4]	//R2 points to the first element
+ 1d0:	e5942004 	ldr	r2, [r4, #4]
+			LDR R7, [R2, #4]			
+ 1d4:	e5927004 	ldr	r7, [r2, #4]
+			LDR R0, [R2]		//R0 holds the first number in the list
+ 1d8:	e5920000 	ldr	r0, [r2]
+
+000001dc <SWITCH>:
+
+SWITCH:		SUBS R3, R3, #1		//decrement # of elements in the list
+ 1dc:	e2533001 	subs	r3, r3, #1
+			BEQ BUBBLE			 
+ 1e0:	0afffff6 	beq	1c0 <BUBBLE>
+			LDR R6, [R7]		//load next number in the list
+ 1e4:	e5976000 	ldr	r6, [r7]
+			CMP	R0, R6			//compare the current number with the next number
+ 1e8:	e1500006 	cmp	r0, r6
+			STRGT R7, [R0]		//if greater than, we switch the two numbers
+ 1ec:	c5807000 	strgt	r7, [r0]
+			STRGT R2, [R6]
+ 1f0:	c5862000 	strgt	r2, [r6]
+			MOVGT R1, #0		//update boolean to false
+ 1f4:	c3a01000 	movgt	r1, #0
+			MOV R2, R7			//move pointer to the next number in the list 
+ 1f8:	e1a02007 	mov	r2, r7
+			ADD R7, R7, #4
+ 1fc:	e2877004 	add	r7, r7, #4
+			LDR R0, [R2]		//update the value of R0
+ 200:	e5920000 	ldr	r0, [r2]
+			B SWITCH		
+ 204:	eafffff4 	b	1dc <SWITCH>
+
+00000208 <TRUE>:
+
+TRUE:		B TRUE				//infinite loop
+ 208:	eafffffe 	b	208 <TRUE>
+
+0000020c <N>:
+ 20c:	00000005 	.word	0x00000005
+
+00000210 <ARRAY>:
+ 210:	00000005 	.word	0x00000005
+ 214:	00000007 	.word	0x00000007
+ 218:	00000003 	.word	0x00000003
+ 21c:	00000008 	.word	0x00000008
+ 220:	00000002 	.word	0x00000002
+ 224:	0000020c 	.word	0x0000020c

@@ -1,0 +1,173 @@
+
+//campus.mcgill.ca/emf/CPE/kpouli3/Desktop/G16_Lab1/sort.axf:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+00000000 <__cs3_interrupt_vector>:
+			.text
+			.global _start
+
+//_start:			
+			LDR R4, =N			//R4 points to # of elements in the list
+   0:	e59f406c 	ldr	r4, [pc, #108]	; 74 <ARRAY+0x14>
+			LDR R5, [R4]		//R5 holds the number of elements in the list
+   4:	e5945000 	ldr	r5, [r4]
+
+			MOV R1, #0			// R1 = boolean for sorted
+   8:	e3a01000 	mov	r1, #0
+
+0000000c <BUBBLE>:
+
+BUBBLE:		CMP R1, #1
+   c:	e3510001 	cmp	r1, #1
+			BEQ TRUE			//stop the loop if sorted == true
+  10:	0a000010 	beq	58 <TRUE>
+			MOV R1, #1
+  14:	e3a01001 	mov	r1, #1
+			MOV R3, R5			// number of elements in the list
+  18:	e1a03005 	mov	r3, r5
+			LDR R2, [R4, #4]	//R2 points to the first element
+  1c:	e5942004 	ldr	r2, [r4, #4]
+			LDR R7, [R2, #4]			
+  20:	e5927004 	ldr	r7, [r2, #4]
+			LDR R0, [R2]		//R0 holds the first number in the list
+  24:	e5920000 	ldr	r0, [r2]
+			B SWITCH
+  28:	eaffffff 	b	2c <SWITCH>
+
+0000002c <SWITCH>:
+			
+SWITCH:		SUBS R3, R3, #1		//decrement # of elements in the list
+  2c:	e2533001 	subs	r3, r3, #1
+			BEQ BUBBLE			 
+  30:	0afffff5 	beq	c <BUBBLE>
+			LDR R6, [R7]		//load next number in the list
+  34:	e5976000 	ldr	r6, [r7]
+			CMP	R0, R6			//compare the current number with the next number
+  38:	e1500006 	cmp	r0, r6
+			STRGT R7, [R0]		//if greater than, we switch the two numbers
+  3c:	c5807000 	strgt	r7, [r0]
+			STRGT R2, [R6]
+  40:	c5862000 	strgt	r2, [r6]
+			MOVGT R1, #0		//update boolean to false
+  44:	c3a01000 	movgt	r1, #0
+			MOV R2, R7			//move pointer to the next number in the list 
+  48:	e1a02007 	mov	r2, r7
+			ADD R7, R7, #4
+  4c:	e2877004 	add	r7, r7, #4
+			LDR R0, [R2]		//update the value of R0
+  50:	e5920000 	ldr	r0, [r2]
+			B SWITCH		
+  54:	eafffff4 	b	2c <SWITCH>
+
+00000058 <TRUE>:
+
+TRUE:		B TRUE				//infinite loop
+  58:	eafffffe 	b	58 <TRUE>
+
+0000005c <N>:
+  5c:	00000005 	.word	0x00000005
+
+00000060 <ARRAY>:
+  60:	00000005 	.word	0x00000005
+  64:	00000007 	.word	0x00000007
+  68:	00000003 	.word	0x00000003
+  6c:	00000008 	.word	0x00000008
+  70:	00000002 	.word	0x00000002
+  74:	0000005c 	.word	0x0000005c
+
+00000078 <_start>:
+			
+			.text
+			.global _start
+
+_start:
+			LDR R0, =N			//R0 points to the number of elements in the list
+  78:	e59f0090 	ldr	r0, [pc, #144]	; 110 <ARRAY+0x1c>
+			LDR R1, [R0]		//value of N is stored in R1
+  7c:	e5901000 	ldr	r1, [r0]
+			MOV R5, #0			//sorted=false
+  80:	e3a05000 	mov	r5, #0
+			MOV R6, #0			
+  84:	e3a06000 	mov	r6, #0
+			SUB R10, R1, #2		//array length - 2
+  88:	e241a002 	sub	r10, r1, #2
+
+0000008c <WHILE>:
+
+WHILE:		MOV R8, #0			//j=0
+  8c:	e3a08000 	mov	r8, #0
+			ADD R2, R0, #4		//R2 points to first element in list
+  90:	e2802004 	add	r2, r0, #4
+			ADD R9, R2, #4		//R9 points to next element in list
+  94:	e2829004 	add	r9, r2, #4
+			SUB R7, R10, R6		//array.length - 2 - i
+  98:	e04a7006 	sub	r7, r10, r6
+			CMP R5, #1			//while loop
+  9c:	e3550001 	cmp	r5, #1
+			BEQ SORTED
+  a0:	0a000011 	beq	ec <SORTED>
+			MOVNE R5, #1		//sorted = true
+  a4:	13a05001 	movne	r5, #1
+			BNE NOTSORTED
+  a8:	1a000000 	bne	b0 <NOTSORTED>
+			B WHILE
+  ac:	eafffff6 	b	8c <WHILE>
+
+000000b0 <NOTSORTED>:
+
+NOTSORTED:	CMP R8, R7
+  b0:	e1580007 	cmp	r8, r7
+			BGT DONE
+  b4:	ca00000a 	bgt	e4 <DONE>
+			BLE COMPARE
+  b8:	daffffff 	ble	bc <COMPARE>
+
+000000bc <COMPARE>:
+
+COMPARE:	LDR R3, [R2]		//current element in list
+  bc:	e5923000 	ldr	r3, [r2]
+			LDR R4, [R9]		//next element in the list
+  c0:	e5994000 	ldr	r4, [r9]
+			CMP R3, R4
+  c4:	e1530004 	cmp	r3, r4
+			STRGT R3, [R9]
+  c8:	c5893000 	strgt	r3, [r9]
+			STRGT R4, [R2]
+  cc:	c5824000 	strgt	r4, [r2]
+			MOVGT R5, #0
+  d0:	c3a05000 	movgt	r5, #0
+			ADD R8, R8, #1		//increment j
+  d4:	e2888001 	add	r8, r8, #1
+			MOV R2, R9			//change pointers
+  d8:	e1a02009 	mov	r2, r9
+			ADD R9, R9, #4
+  dc:	e2899004 	add	r9, r9, #4
+			B NOTSORTED
+  e0:	eafffff2 	b	b0 <NOTSORTED>
+
+000000e4 <DONE>:
+			
+DONE:		ADD R6, R6, #1		//increment i
+  e4:	e2866001 	add	r6, r6, #1
+			B WHILE
+  e8:	eaffffe7 	b	8c <WHILE>
+
+000000ec <SORTED>:
+
+SORTED:		B SORTED
+  ec:	eafffffe 	b	ec <SORTED>
+
+000000f0 <N>:
+  f0:	00000007 	.word	0x00000007
+
+000000f4 <ARRAY>:
+  f4:	00000005 	.word	0x00000005
+  f8:	00000007 	.word	0x00000007
+  fc:	00000003 	.word	0x00000003
+ 100:	00000008 	.word	0x00000008
+ 104:	00000002 	.word	0x00000002
+ 108:	0000000a 	.word	0x0000000a
+ 10c:	00000001 	.word	0x00000001
+ 110:	000000f0 	.word	0x000000f0
