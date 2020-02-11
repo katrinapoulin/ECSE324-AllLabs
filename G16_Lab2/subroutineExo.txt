@@ -1,5 +1,6 @@
-// 1.2 subroutine caller convention
+//subroutine caller convention
 //this is a c program that uses method which we will then implement in ARM
+//ce truc c'etait juste pour me rappeler comment les subroutines fonctionnent
 
 	void main {
 		int a;
