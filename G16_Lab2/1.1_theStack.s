@@ -13,26 +13,34 @@
 				.text
 				.global _start
 
-_start:
+//_start:		
+				LDR R3, =TWO
+				LDR R4, =ONE
+				LDR R5, =ZERO
+
+				MOV R0, #0
+				MOV R1, #1
+				MOV R2, #2
+
 				//PUSH OPERATION
-				LDR R0, #0
-				LDR R1, #1
-				LDR R2, #2
+				STR R2, [SP, #-4]!
+				STR R1, [SP, #-4]!
+				STR R0, [SP, #-4]!
 
 				//POP OPERATION
-				STR R0, [SP, #-4]!
-				STR R1, [SP, #-4]!
-				STR R2, [SP, #-4]!
+				LDR R0, [SP], #4
+				LDR R1, [SP], #4
+				LDR R2, [SP], #4
 
-				//TEST
-				LDR R2, [SP, #4]!
-				LDR R1, [SP, #4]!
-				LDR R0, [SP, #4]!
+				MOV R3, R0
+				MOV R4, R1
+				MOV R5, R2
 
 END:			B END
 
-// this is litteraly useless i don't get this part
-
+TWO:			.word 9
+ONE:			.word 9
+ZERO:			.word 9
 
 
 
