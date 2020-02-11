@@ -14,14 +14,17 @@
 				.global _start
 
 _start:
+				//PUSH OPERATION
 				LDR R0, #0
 				LDR R1, #1
 				LDR R2, #2
 
+				//POP OPERATION
 				STR R0, [SP, #-4]!
 				STR R1, [SP, #-4]!
 				STR R2, [SP, #-4]!
 
+				//TEST
 				LDR R2, [SP, #4]!
 				LDR R1, [SP, #4]!
 				LDR R0, [SP, #4]!
