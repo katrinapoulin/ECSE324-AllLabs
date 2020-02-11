@@ -27,28 +27,6 @@ N:				.word 7					//# of entries in list
 NUMBERS:		.word 4, 5, 3, 6		//list data
 				.word 1, 8, 2
 
-//this is c code to find the max using a method to compare two elements of the array
-
-	int array[] = {4,5,3,6,1,8,2};
-
-	void main() {
-		while (!sorted) {
-			for (int i=0; i < array.size();i++){
-				sorted = compareAndSwap(&array[i], &array[i+1]);
-			}
-		}
-	}
-
-	boolean compareAndSwap(int* i, int* j) {
-		int temp;
-		if (i < j) {
-			temp = j;
-			j = i;
-			i = temp;
-			return false;
-		} 
-	}
-
 //corresponding ARM assembly code
 
 
