@@ -13,26 +13,24 @@
 				.text
 				.global _start
 
-_start:
+//_start:		
+
+				MOV R0, #0
+				MOV R1, #1
+				MOV R2, #2
+
 				//PUSH OPERATION
-				LDR R0, #0
-				LDR R1, #1
-				LDR R2, #2
+				STR R2, [SP, #-4]!
+				STR R1, [SP, #-4]!
+				STR R0, [SP, #-4]!
 
 				//POP OPERATION
-				STR R0, [SP, #-4]!
-				STR R1, [SP, #-4]!
-				STR R2, [SP, #-4]!
+				LDR R3, [SP], #4
+				LDR R4, [SP], #4
+				LDR R5, [SP], #4
 
-				//TEST
-				LDR R2, [SP, #4]!
-				LDR R1, [SP, #4]!
-				LDR R0, [SP, #4]!
 
 END:			B END
-
-// this is litteraly useless i don't get this part
-
 
 
 
