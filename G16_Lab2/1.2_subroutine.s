@@ -29,4 +29,3 @@ RESULT:				.word 0					//memory assigned for result location
 N:					.word 7					//# of entries in list
 NUMBERS:			.word 4, 5, 3, 6		//list data
 					.word 1, 8, 9
-
