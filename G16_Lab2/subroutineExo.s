@@ -23,7 +23,7 @@
 				.text
 				.global _start
 
-_start: 
+//_start: 
 				LDR R1, =A			//R1 = a
 				LDR R2, =B			//R2 = b
 				ADD R0, R1, R2		//x = a+b

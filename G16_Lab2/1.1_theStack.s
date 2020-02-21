@@ -14,9 +14,7 @@
 				.global _start
 
 //_start:		
-				LDR R3, =TWO
-				LDR R4, =ONE
-				LDR R5, =ZERO
+
 
 				MOV R0, #0
 				MOV R1, #1
@@ -28,6 +26,7 @@
 				STR R0, [SP, #-4]!
 
 				//POP OPERATION
+
 				LDR R0, [SP], #4
 				LDR R1, [SP], #4
 				LDR R2, [SP], #4
@@ -37,10 +36,6 @@
 				MOV R5, R2
 
 END:			B END
-
-TWO:			.word 9
-ONE:			.word 9
-ZERO:			.word 9
 
 
 
