@@ -1,6 +1,6 @@
-#ifndef _HEX_DISPLAYS
-#define _HEX_DISPLAYS
-	
+#ifndef __HEX_DISPLAYS
+#define __HEX_DISPLAYS
+
 	typedef enum {
 		HEX0 = 0x00000001,
 		HEX1 = 0x00000002,
