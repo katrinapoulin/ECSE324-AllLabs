@@ -20,13 +20,13 @@ main:
 	B main
 
 clear_buffs:
-	PUSH {R0-R12, LR}
+	PUSH {R3-R12, LR}
 	BL VGA_clear_charbuff_ASM
 	BL VGA_clear_pixelbuff_ASM
 	B done
 
 test_byte:
-	PUSH {R0-R12, LR}
+	PUSH {R3-R12, LR}
 	MOV R0, #0	//x=0
 	MOV R1, #0	//y=0
 	MOV R2, #0	//c=0
@@ -39,48 +39,37 @@ loop_test_byte:
 	MOVGE R0, #0
 	BGE loop_test_byte
 	BL VGA_write_byte_ASM
-	ADD R2, R2, #1
-	ADD R0, R0, #3
+	CMP R2, #0xFF
+	MOVEQ R2, #0
+	ADDNE R2, R2, #1
+	ADD R0, R0, #2
 	B loop_test_byte
 
 /*WRITE CHAR BYTE
 	//R0:x position			R7:
 	//R1:y position 		R8:
 	//R2:char				R9:
-	//R3:char 1				R10:
-	//R4:char 2				R11:
-	//R5:shifted y			R12: 
-	//R6:address to print from
+	//R3:ascii table chars				R10:
+	//R4:stored char			R11:
+	//R5:			R12: 
+	//R6:
 	*/
 VGA_write_byte_ASM:
-	PUSH {R0-R12, LR}
-	//check x and y
-	CMP R1, #59
-	BGE done
-	CMP R0, #79
-	BGE done
-	CMP R1, #0
-	BLE done
-	CMP R0, #0
-	BLE done
-
-	LDR R7, =ascii_chars
-	
-	//first char
-	MOV R3, R2
-	LSR R2, R3, #4
-	LDRB R2, [R7, R2]
-	BL VGA_write_char_ASM
-
-	//second char
-	ADD R0, R0, #1 //increment x
-	AND R2, R3, #15
-	LDRB R2, [R7, R2]
-	BL VGA_write_char_ASM
+	PUSH {R3-R12, LR}
+	LDR R3, =ascii_chars	
+	MOV R4, R2				
+	LSR R2, R4, #4			
+	LDRB R2, [R3, R2]		
+	BL	VGA_write_char_ASM	
+	ADD R0, R0, #1			
+	AND R2, R4, #15			
+	LDRB R2, [R3, R2]		
+	BL VGA_write_char_ASM	
+	MOV R2, R4
 	B done
 
 test_char:
-	PUSH {R0-R12, LR}
+	PUSH {R3-R12, LR}
 	MOV R0, #0	//x=0
 	MOV R1, #0	//y=0
 	MOV R2, #0	//c=0
@@ -98,7 +87,7 @@ loop_test_char:
 	B loop_test_char
 
 test_pixel:
-	PUSH {R0-R12, LR}
+	PUSH {R3-R12, LR}
 	MOV R0, #0	//x=0
 	MOV R1, #0	//y=0
 	MOV R2, #0	//c=0
@@ -126,7 +115,7 @@ loop_test_pixel:
 	//R6:
 	*/
 VGA_draw_point_ASM:
-	PUSH {R0-R12, LR}
+	PUSH {R3-R12, LR}
 	CMP R1, #0xEF
 	BGT done
 	CMP R0, R12
@@ -154,7 +143,7 @@ VGA_draw_point_ASM:
 	//R6:shifted y / value to add
 	*/
 VGA_clear_pixelbuff_ASM:
-	PUSH {R0-R12, LR}
+	PUSH {R3-R12, LR}
 	MOV R4, #0
 	MOV R5, #0
 	MOV R9, #0
@@ -176,7 +165,7 @@ loop_cp:
 	ADD R4, R4, #1
 	B loop_cp
 clear_p:
-	PUSH {R0-R12, LR}
+	PUSH {R3-R12, LR}
 	LSL R6, R4, #10
 	LSL R7, R5, #1
 	ADD R6, R6, R7
@@ -207,7 +196,7 @@ compare_yp:
 	//R6:shifted y / value to add
 	*/
 VGA_clear_charbuff_ASM:
-	PUSH {R0-R12, LR}
+	PUSH {R3-R12, LR}
 	MOV R4, #0
 	MOV R5, #0
 	MOV R9, #0
@@ -226,7 +215,7 @@ loop_cc:
 	ADD R4, R4, #1
 	B loop_cc
 clear_c:
-	PUSH {R0-R12, LR}
+	PUSH {R3-R12, LR}
 	LSL R6, R4, #7
 	LSL R7, R5, #0
 	ADD R6, R6, R7
@@ -258,7 +247,7 @@ compare_yc:
 	//R6:
 	*/
 VGA_write_char_ASM:
-	PUSH {R0-R12, LR}
+	PUSH {R3-R12, LR}
 	CMP R1, #60
 	BGE done
 	CMP R0, #80
@@ -275,11 +264,10 @@ VGA_write_char_ASM:
 	B done
 
 done:
-	POP {R0-R12, LR}
+	POP {R3-R12, LR}
 	BX LR
 
 ascii_chars:
-	.byte 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46
-		
+	.ascii "0123456789ABCDEF"		
 	
 	.end
